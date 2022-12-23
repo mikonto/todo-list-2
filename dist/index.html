@@ -24,15 +24,16 @@
   <body>
     <div id="grid-container">
       <header id="header">
-        <h2><i class="fa-regular fa-circle-check"></i> Todo</h2>
+        <h1><i class="fa-regular fa-circle-check"></i> Todo</h1>
         <button>
           <i class="fas fa-bars"></i>
         </button>
       </header>
- 
+
       <nav id="nav">
+        <!-- Default projects -->
         <div class="default-projects-list">
-          <button>
+          <button class="active">
             <i class="fas fa-inbox"></i>
             Inbox
           </button>
@@ -45,12 +46,20 @@
             This week
           </button>
         </div>
+
+        <!-- User projects -->
+        <h1 class="projects-title">Projects</h1>
+        <div class="projects-list"></div>
+        <button class="button-add-project" id="button-add-project">
+          <i class="fas fa-plus"></i>
+          Add Project
+        </button>
       </nav>
 
-      <main id="main">Main content</main>
+      <main id="main"></main>
 
       <footer id="footer">
-        <p>Footer</p>
+        <p>Mikonto</p>
       </footer>
     </div>
     <script src="main.js"></script>

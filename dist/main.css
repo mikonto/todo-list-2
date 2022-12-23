@@ -16,15 +16,33 @@ body {
   height: 100vh;
 }
 
+button {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--secondary-light);
+}
+
+button,
+input {
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
 /* The grid container */
 #grid-container {
   display: grid;
   min-height: 100%;
   grid-template-rows: 80px calc(100vh - 80px - 50px) 50px;
+  grid-template-columns: 250px calc(100% - 250px);
   grid-template-areas:
-    "header header header header header"
-    "nav main main main main"
-    "footer footer footer footer footer";
+    "header header"
+    "nav main"
+    "footer footer";
 }
 
 /* Style the header */
@@ -38,7 +56,8 @@ body {
   font-size: 30px;
 }
 
-#header h2 {
+#header h1 {
+  font-size: 32px;
   margin: 0;
   color: #eee;
 }
@@ -51,8 +70,8 @@ body {
 }
 
 #nav {
-  width: 300px;
-  min-width: 250px;
+  width: 250px;
+  /* min-width: 250px; */
   padding: 20px;
   grid-area: nav;
   background-color: var(--secondary-light);
@@ -60,6 +79,27 @@ body {
 
 #nav.active {
   display: block;
+}
+
+#nav button {
+  text-align: left;
+}
+
+#nav button.active {
+  background-color: #ccc;
+  font-weight: bold;
+}
+
+#nav .fas {
+  margin-right: 6px;
+}
+
+#nav h1 {
+  font-size: 22px;
+}
+
+.default-projects-list {
+  margin-bottom: 20px;
 }
 
 #main {
