@@ -1,9 +1,3 @@
-const menuBtn = document.getElementsByClassName("fa-bars")[0];
+import UI from "./modules/UI";
 
-function toggleNav() {
-  const nav = document.getElementById("nav");
-  nav.classList.toggle("active");
-
-}
-
-menuBtn.addEventListener("click", toggleNav);
+document.addEventListener("DOMContentLoaded", UI.loadHomepage);
