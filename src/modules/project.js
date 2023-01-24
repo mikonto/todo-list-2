@@ -11,4 +11,8 @@ export default class Project {
   static instances = [];
 
   static index = new Project("index");
+
+  static userProj1 = new Project("User project 1");
+
+  static userProj2 = new Project("User project 2");
 }
