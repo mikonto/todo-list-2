@@ -1,0 +1,42 @@
+When loading the app:
+- Inbox is open by default
+
+- Check if localStorage exists
+-- If yes, load existing tasks of inbox & projects
+-- If no, show empty inbox
+
+Actions that can be done from the main view:
+
+Menu:
+- Open inbox
+-- Shows tasks of the default project (= Inbox)
+
+- Open Today
+-- Shows all the task that have due date today
+
+- Open This week
+-- Shows all the task that have due date this week
+
+- Open projects
+-- Shows tasks of other projects (if exists)
+
+- Add Project
+-- Opens a window for adding a new project. Input: name
+
+- Delete projects
+-- Deletes project (non default project)
+
+Main section:
+- Add Task
+-- Opens a window for adding new task. Inputs: title, description, due date, priority
+
+- Complete task
+-- When clicking task, it will be completed & disappears from the list
+-- Completion time will be added into task
+
+- Delete/edit tasks
+-- Delete removes the task
+-- Edit opens window for editing the task
+
+Ideas:
+Make a class that adds all the instances into an array. Then loop over the array when opening lists.

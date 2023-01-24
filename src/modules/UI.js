@@ -1,6 +1,15 @@
+import Project from "./project";
+import Task from "./task";
+
 export default class UI {
   static loadHomepage() {
-    UI.initButtons();
+    UI.initMenuBtn();
+    UI.loadIndex();
+  }
+
+  static initMenuBtn() {
+    const menuBtn = document.getElementsByClassName("fa-bars")[0];
+    menuBtn.addEventListener("click", UI.toggleNav);
   }
 
   static toggleNav() {
@@ -8,8 +17,14 @@ export default class UI {
     nav.classList.toggle("active");
   }
 
-  static initButtons() {
-    const menuBtn = document.getElementsByClassName("fa-bars")[0];
-    menuBtn.addEventListener("click", UI.toggleNav);
+  static loadIndex() {
+    const main = document.getElementById("main");
+    Task.instances.forEach((object) => {
+      if (object.project === "index") {
+        Object.entries(object).forEach(([key, value]) => {
+          main.innerHTML += `${key}: ${value} <br>`;
+        });
+      }
+    });
   }
 }
