@@ -4,8 +4,9 @@ import Task from "./task";
 export default class UI {
   static loadHomepage() {
     UI.initMenuBtn();
-    UI.displayTasks(Project.index);
-    UI.displayProjects();
+    UI.updateDefaultProjectList();
+    UI.updateProjectsList();
+    UI.updateTasks(Project.index);
   }
 
   static initMenuBtn() {
@@ -18,20 +19,16 @@ export default class UI {
     nav.classList.toggle("active");
   }
 
-  static displayTasks(project) {
-    const main = document.getElementById("main");
-    main.textContent = "";
-    Task.instances.forEach((object) => {
-      if (object.project === project) {
-        Object.entries(object).forEach(([key, value]) => {
-          main.innerHTML += `${key}: ${value} <br>`;
-        });
-      }
+  static updateDefaultProjectList() {
+    const index = document.getElementById("index");
+
+    index.addEventListener("click", () => {
+      UI.updateTasks(Project.index);
     });
   }
 
-  static displayProjects() {
-    const projectsList = document.getElementsByClassName("projects-list")[0];
+  static updateProjectsList() {
+    const projectsList = document.getElementById("projects-list");
     Project.instances.forEach((object) => {
       if (object !== Project.index) {
         Object.entries(object).forEach(() => {
@@ -40,8 +37,20 @@ export default class UI {
           projectsList.appendChild(button);
 
           button.addEventListener("click", () => {
-            UI.displayTasks(object);
+            UI.updateTasks(object);
           });
+        });
+      }
+    });
+  }
+
+  static updateTasks(project) {
+    const main = document.getElementById("main");
+    main.textContent = "";
+    Task.instances.forEach((object) => {
+      if (object.project === project && object.finished === false) {
+        Object.entries(object).forEach(([key, value]) => {
+          main.innerHTML += `${key}: ${value} <br>`;
         });
       }
     });

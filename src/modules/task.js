@@ -1,12 +1,13 @@
 import Project from "./project";
 
 export default class Task {
-  constructor(project, title, description, dueDate, priority) {
+  constructor(project, title, description, dueDate, priority, finished) {
     this.project = project;
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
+    this.finished = finished;
     this.addToArray();
   }
 
@@ -21,14 +22,25 @@ export default class Task {
     "Gym",
     "Go to the gym now",
     "Due date will be here",
-    "High priority"
+    "High priority",
+    false
   );
 
   static task2 = new Task(
+    Project.index,
+    "Gym",
+    "Go to the gym now",
+    "Due date will be here",
+    "High priority",
+    true
+  );
+
+  static task3 = new Task(
     Project.userProj1,
     "Gym project 1",
     "Go to the gym now 3131",
     "Due date will be heredsafsa",
-    "High priority"
+    "High priority",
+    false
   );
 }
