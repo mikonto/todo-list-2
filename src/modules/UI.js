@@ -1,12 +1,11 @@
-import Project from "./project";
-import Task from "./task";
+import TodoList from "./todoList";
+import Todo from "./todo";
 
 export default class UI {
   static loadHomepage() {
     UI.initMenuBtn();
-    UI.updateDefaultProjectList();
-    UI.updateProjectsList();
-    UI.updateTasks(Project.index);
+    UI.initDefaultTodoList();
+    UI.initTodoList();
   }
 
   static initMenuBtn() {
@@ -19,40 +18,40 @@ export default class UI {
     nav.classList.toggle("active");
   }
 
-  static updateDefaultProjectList() {
-    const index = document.getElementById("index");
-
+  static initDefaultTodoList() {
+    const index = document.getElementById("inbox");
     index.addEventListener("click", () => {
-      UI.updateTasks(Project.index);
+      UI.updateTasks(TodoList.instances[0].id);
     });
   }
 
-  static updateProjectsList() {
-    const projectsList = document.getElementById("projects-list");
-    Project.instances.forEach((object) => {
-      if (object !== Project.index) {
-        Object.entries(object).forEach(() => {
-          const button = document.createElement("button");
-          button.innerText = `${object.name}`;
-          projectsList.appendChild(button);
+  static initTodoList() {
+    const todoListElem = document.getElementById("todo-lists");
+    todoListElem.textContent = "";
 
-          button.addEventListener("click", () => {
-            UI.updateTasks(object);
-          });
-        });
-      }
-    });
+    for (let i = 1; i < TodoList.instances.length; i += 1) {
+      const button = document.createElement("button");
+      button.innerText = `${TodoList.instances[i].name}`;
+      todoListElem.appendChild(button);
+      button.addEventListener("click", () => {
+        UI.updateTasks(TodoList.instances[i].id);
+      });
+    }
   }
 
-  static updateTasks(project) {
+  static updateTasks(todoListId) {
     const main = document.getElementById("main");
     main.textContent = "";
-    Task.instances.forEach((object) => {
-      if (object.project === project && object.finished === false) {
-        Object.entries(object).forEach(([key, value]) => {
-          main.innerHTML += `${key}: ${value} <br>`;
-        });
+    for (let i = 0; i < Todo.instances.length; i++) {
+      if (Todo.instances[i].todoListId === todoListId) {
+        const mainElem = document.getElementById("main");
+        let innerHTML = "";
+        const keys = Object.keys(Todo.instances[i]);
+        for (let j = 0; j < keys.length; j++) {
+          innerHTML += `${keys[j]}: ${Todo.instances[i][keys[j]]}<br>`;
+        }
+        mainElem.innerHTML = innerHTML;
       }
-    });
+    }
   }
 }
