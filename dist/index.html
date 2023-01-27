@@ -33,15 +33,15 @@
       <nav id="nav">
         <!-- Default todo-list -->
         <div class="default-todo-list">
-          <button id="inbox" class="active">
+          <button id="inbox" class="nav-button active">
             <i class="fas fa-inbox"></i>
             Inbox
           </button>
-          <button id="today">
+          <button id="today" class="nav-button">
             <i class="fas fa-calendar-day"></i>
             Today
           </button>
-          <button id="this-week">
+          <button id="this-week" class="nav-button">
             <i class="fas fa-calendar-week"></i>
             This week
           </button>
@@ -63,5 +63,21 @@
       </footer>
     </div>
     <script src="main.js"></script>
+
+    <div id="modal-todo-list">
+      <div id="modal-content-todo-list">
+        <div id="modal-body-todo-list">
+          <input
+            type="text"
+            id="todo-list-name-input"
+            placeholder="Enter todo-list name"
+          />
+        </div>
+        <div id="modal-footer-todo-list">
+          <button id="modal-todo-list-add">Add</button>
+          <button id="modal-todo-list-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

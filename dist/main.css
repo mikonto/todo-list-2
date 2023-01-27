@@ -1,6 +1,8 @@
 :root {
   --primary-dark: #393939;
-  --secondary-dark: #444;
+  /* --secondary-dark: #444; */
+  --secondary-dark: #555;
+
   --primary-light: #eee;
   --secondary-light: #ddd;
 }
@@ -85,7 +87,8 @@ input {
   text-align: left;
 }
 
-#nav button.active {
+.nav-button.active,
+.nav-button:hover {
   background-color: #ccc;
   font-weight: bold;
 }
@@ -141,4 +144,62 @@ input {
     display: none;
     width: 100%;
   }
+}
+
+/* ----------------------------------------------------------- */
+
+#modal-todo-list {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#modal-todo-list.active {
+  display: block;
+}
+
+/* Modal Content/Box */
+#modal-content-todo-list {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 6px;
+}
+
+/* Modal Body */
+#modal-body-todo-list {
+  padding: 10px 20px;
+  border: solid rgba(0, 0, 0, 0.4) 1px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Modal Footer */
+#modal-footer-todo-list {
+  display: flex;
+}
+
+/* Cancel and Add buttons */
+#modal-todo-list-cancel,
+#modal-todo-list-add {
+  height: 340x;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#modal-todo-list-add {
+  margin-right: 10px;
+}
+
+#modal-todo-list-cancel:hover,
+#modal-todo-list-add:hover {
+  background-color: var(--secondary-dark);
+  color: white;
 }

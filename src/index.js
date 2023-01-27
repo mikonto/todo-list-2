@@ -4,10 +4,10 @@ import Todo from "./modules/todo";
 
 document.addEventListener("DOMContentLoaded", TodoList.init);
 document.addEventListener("DOMContentLoaded", () => {
-  TodoList.add("Test");
+  TodoList.add("User project 1");
 });
 document.addEventListener("DOMContentLoaded", () => {
-  TodoList.add("More test");
+  TodoList.add("User project 2");
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -27,15 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "Due date hdsadsaere",
     "Prioritydsadsa Low, Medium or High",
     false
-  );
-
-  Todo.add(
-    2,
-    "dsadasTest todsao",
-    "Descriptiodsadsan for ftodo",
-    "Due date hdsasfafasdsaere",
-    "Prioritydsadsa Low, Mefsafdium or High",
-    true
   );
 
 });
