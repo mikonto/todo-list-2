@@ -1,22 +1,27 @@
 import Todo from "./todo";
 
-let id = 0;
-
 export default class TodoList {
   constructor(name) {
-    this.id = id;
+    this.id = TodoList.generateUniqueId();
     this.name = name;
-    id += 1;
   }
 
-  static instances = [];
+  static instances = localStorage.getItem("todoLists")
+    ? JSON.parse(localStorage.getItem("todoLists"))
+    : [];
 
   static init() {
-    if (localStorage.getItem("todoLists") === null) {
-      TodoList.add("Inbox");
-    } else if (TodoList.instances.length === 0) {
-      TodoList.instances = JSON.parse(localStorage.getItem("todoLists"));
+    if (!localStorage.getItem("todoLists")) {
+      TodoList.instances = [];
     }
+    if (TodoList.instances.length === 0) {
+      TodoList.add("Inbox");
+    }
+  }
+
+  static generateUniqueId() {
+    const uniqueId = Math.floor(Math.random() * 1000000000);
+    return uniqueId;
   }
 
   static add(name) {
@@ -26,10 +31,10 @@ export default class TodoList {
   }
 
   static remove(id) {
-    // filter out the TodoList instance with the matching id
-    TodoList.instances = TodoList.instances.filter(instance => instance.id !== id);
-    // filter out all Todos that have a todoListId of the removed TodoList's id
-    Todo.instances = Todo.instances.filter(todo => todo.todoListId !== id);
+    TodoList.instances = TodoList.instances.filter(
+      (instance) => instance.id !== id
+    );
+    Todo.instances = Todo.instances.filter((todo) => todo.todoListId !== id);
     TodoList.save();
     Todo.save();
   }

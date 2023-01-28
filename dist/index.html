@@ -32,7 +32,7 @@
 
       <nav id="nav">
         <!-- Default todo-list -->
-        <div class="default-todo-list">
+        <div id="default-todo-list">
           <button id="inbox" class="nav-button active">
             <i class="fas fa-inbox"></i>
             Inbox
@@ -66,6 +66,7 @@
 
     <div id="modal-todo-list">
       <div id="modal-content-todo-list">
+        <div id="modal-header-todo-list">Add Todolist</div>
         <div id="modal-body-todo-list">
           <input
             type="text"
@@ -76,6 +77,34 @@
         <div id="modal-footer-todo-list">
           <button id="modal-todo-list-add">Add</button>
           <button id="modal-todo-list-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-todo">
+      <div id="modal-content-todo">
+        <div id="modal-header-todo">Add Todo</div>
+        <div id="modal-body-todo">
+          <input type="text" id="todo-name-input" placeholder="Enter title" />
+          <input
+            type="text"
+            id="todo-description-input"
+            placeholder="Enter description"
+          />
+          <input
+            type="text"
+            id="todo-duedate-input"
+            placeholder="Enter due date"
+          />
+          <input
+            type="text"
+            id="todo-priority-input"
+            placeholder="Enter priority"
+          />
+        </div>
+        <div id="modal-footer-todo">
+          <button id="modal-todo-add">Add</button>
+          <button id="modal-todo-cancel">Cancel</button>
         </div>
       </div>
     </div>

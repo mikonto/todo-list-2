@@ -12,8 +12,10 @@ export default class Todo {
 
   static init() {
     if (localStorage.getItem("todos")) {
-      Todo.instances = JSON.parse(localStorage.getItem("todos"))
-      console.log("localstorage is NOT empty")
+      const todos = JSON.parse(localStorage.getItem("todos"));
+      if (todos.length > 0) {
+        Todo.instances = todos;
+      }
     }
   }
 

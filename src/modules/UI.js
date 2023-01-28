@@ -4,7 +4,7 @@ import Todo from "./todo";
 export default class UI {
   static loadHomepage() {
     UI.initButtons();
-    UI.displayTodos("todoListId", 0);
+    UI.displayTodos("todoListId", TodoList.instances[0].id);
   }
 
   static initButtons() {
@@ -14,6 +14,7 @@ export default class UI {
     UI.initTodoListButtons();
     UI.initAddTodoListButton();
     UI.initTodoListModal();
+    UI.initTodoModal();
   }
 
   static initMenuButton() {
@@ -37,36 +38,34 @@ export default class UI {
   static initDefaultTodoListButtons() {
     const inbox = document.getElementById("inbox");
     inbox.addEventListener("click", () => {
-      UI.displayTodos("todoListId", 0);
+      UI.displayTodos("todoListId", TodoList.instances[0].id);
     });
   }
 
   static initTodoListButtons() {
-    const todoListElem = document.getElementById("todo-lists");
-    todoListElem.textContent = "";
-
+    const todoListElement = document.getElementById("todo-lists");
+    todoListElement.textContent = "";
     for (let i = 1; i < TodoList.instances.length; i += 1) {
-      const container = document.createElement("div");
-      container.classList.add("todo-list-container");
+      const navButton = document.createElement("button");
+      navButton.classList.add("nav-button");
 
-      const button = document.createElement("button");
-      button.innerText = `${TodoList.instances[i].name}`;
-      button.classList.add("nav-button");
-      container.appendChild(button);
-      button.addEventListener("click", () => {
+      const todoListName = document.createElement("button");
+      todoListName.innerText = `${TodoList.instances[i].name}`;
+      todoListName.classList.add("todo-list-name");
+      navButton.appendChild(todoListName);
+      todoListName.addEventListener("click", () => {
         UI.displayTodos("todoListId", TodoList.instances[i].id);
       });
 
-      const deleteButton = document.createElement("button");
-      deleteButton.innerHTML = '<i class="fa fa-times"></i>';
-      deleteButton.classList.add("delete-button");
-      container.appendChild(deleteButton);
-      deleteButton.addEventListener("click", () => {
+      const todoListDelete = document.createElement("button");
+      todoListDelete.innerHTML = '<i class="fa fa-times"></i>';
+      todoListDelete.classList.add("todo-list-delete");
+      navButton.appendChild(todoListDelete);
+      todoListDelete.addEventListener("click", () => {
         TodoList.remove(TodoList.instances[i].id);
-        console.log("remove");
         UI.initTodoListButtons();
       });
-      todoListElem.appendChild(container);
+      todoListElement.appendChild(navButton);
     }
   }
 
@@ -75,7 +74,6 @@ export default class UI {
     addTodoButton.addEventListener("click", (event) => {
       const nav = document.getElementById("modal-todo-list");
       nav.classList.toggle("active");
-      console.log("works");
     });
   }
 
@@ -97,7 +95,17 @@ export default class UI {
       addTodoListModal.classList.toggle("active");
       document.getElementById("todo-list-name-input").value = "";
       UI.initTodoListButtons();
+      UI.makeLastTodoListActive();
     }
+  }
+
+  static makeLastTodoListActive() {
+    document.querySelectorAll(".nav-button").forEach((element) => {
+      element.classList.remove("active");
+    });
+
+    const lastChild = document.querySelector("#todo-lists").lastElementChild;
+    lastChild.classList.add("active");
   }
 
   static initCancelTodoListModal() {
@@ -112,7 +120,8 @@ export default class UI {
   }
 
   static displayTodos(todoKey, todoValue) {
-    const mainElem = document.getElementById("main");
+    const mainSection = document.getElementById("main");
+    mainSection.innerHTML = "";
     let innerHTML = "";
     for (let i = 0; i < Todo.instances.length; i += 1) {
       if (Todo.instances[i][todoKey] === todoValue) {
@@ -124,8 +133,72 @@ export default class UI {
       }
     }
     if (innerHTML === "") {
-      innerHTML = "empty";
+      innerHTML = "No todos";
     }
-    mainElem.innerHTML = innerHTML;
+    const todoDiv = document.createElement("div");
+    todoDiv.innerHTML = innerHTML;
+    todoDiv.setAttribute("id", "todo");
+
+    todoDiv.dataset.todoKey = todoKey;
+    todoDiv.dataset.todoValue = todoValue;
+
+    mainSection.appendChild(todoDiv);
+
+    const addTodoButton = document.createElement("button");
+    const addTodoButtonText = document.createTextNode("Add todo");
+    const addTodoButtonIcon = document.createElement("i");
+    addTodoButtonIcon.classList.add("fas", "fa-plus");
+    addTodoButton.appendChild(addTodoButtonIcon);
+    addTodoButton.appendChild(addTodoButtonText);
+    addTodoButton.setAttribute("id", "add-todo-button");
+    mainSection.appendChild(addTodoButton);
+    UI.initAddTodoButton();
+  }
+
+  static initAddTodoButton() {
+    const addTodoButton = document.getElementById("add-todo-button");
+    addTodoButton.addEventListener("click", (event) => {
+      const nav = document.getElementById("modal-todo");
+      nav.classList.toggle("active");
+    });
+  }
+
+  static initTodoModal() {
+    UI.initAddTodoModal();
+    UI.initCancelTodoModal();
+  }
+
+  static initAddTodoModal() {
+    const addTodoButton = document.getElementById("modal-todo-add");
+    addTodoButton.addEventListener("click", UI.handleAddTodo);
+  }
+
+  static handleAddTodo() {
+    const todoElement = document.querySelector("#todo");
+    const dataTodoKey = todoElement.getAttribute("data-todo-key");
+    const dataTodoValue = todoElement.getAttribute("data-todo-value");
+    Todo.add(
+      dataTodoValue,
+      "name",
+      "title",
+      "description",
+      "due date",
+      "priority",
+      false
+    );
+    const addTodoModal = document.getElementById("modal-todo");
+    addTodoModal.classList.toggle("active");
+    todoElement.value = "";
+    UI.displayTodos(dataTodoKey, dataTodoValue);
+  }
+
+  static initCancelTodoModal() {
+    const cancelTodoButton = document.getElementById("modal-todo-cancel");
+
+    cancelTodoButton.addEventListener("click", (event) => {
+      const nav = document.getElementById("modal-todo");
+      nav.classList.toggle("active");
+      document.getElementById("todo-name-input").value = "";
+    });
   }
 }

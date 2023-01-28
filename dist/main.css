@@ -19,7 +19,6 @@ body {
 }
 
 button {
-  width: 100%;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
@@ -83,22 +82,48 @@ input {
   display: block;
 }
 
-#nav button {
+#default-todo-list > button,
+#todo-lists > button {
   text-align: left;
+  width: 100%;
 }
 
-.nav-button,
-.delete-button {
-  width: auto;
-}
+/* #default-todo-list > button.active,
+#todo-lists > button.active,
+#default-todo-list > button:hover,
+#todo-lists > button:hover {
+  background-color: #ccc;
+  font-weight: bold;
+} */
 
-.nav-button.active,
-.nav-button:hover {
+.nav-button:hover,
+.nav-button.active {
   background-color: #ccc;
   font-weight: bold;
 }
 
-#nav .fas {
+#todo-lists > button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo-list-name {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  font-weight: inherit;
+}
+
+.todo-list-delete {
+  width: 16px;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  font-weight: inherit;
+}
+
+#nav .fas,
+#main .fas {
   margin-right: 6px;
 }
 
@@ -106,21 +131,23 @@ input {
   font-size: 22px;
 }
 
-.default-todo-list {
+#default-todo-list {
   margin-bottom: 20px;
-}
-
-.todo-list-container {
-  display: flex;
-  justify-content: space-between;
 }
 
 #main {
   grid-area: main;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
 }
 
-#main {
-  padding: 20px;
+#add-todo-button {
+  margin-left: auto;
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 120px;
 }
 
 #footer {
@@ -158,7 +185,8 @@ input {
 
 /* ----------------------------------------------------------- */
 
-#modal-todo-list {
+#modal-todo-list,
+#modal-todo {
   display: none;
   position: fixed;
   z-index: 1;
@@ -170,12 +198,17 @@ input {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-#modal-todo-list.active {
+#modal-todo {
+  display: none;
+}
+
+#modal-todo-list.active,
+#modal-todo.active {
   display: block;
 }
 
-/* Modal Content/Box */
-#modal-content-todo-list {
+#modal-content-todo-list,
+#modal-content-todo {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
@@ -183,33 +216,43 @@ input {
   border-radius: 6px;
 }
 
-/* Modal Body */
-#modal-body-todo-list {
+#modal-header-todo-list,
+#modal-header-todo {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+#modal-body-todo-list,
+#modal-body-todo {
+  margin-bottom: 10px;
+}
+
+#modal-body-todo > *,
+#modal-body-todo-list > * {
   padding: 10px 20px;
   border: solid rgba(0, 0, 0, 0.4) 1px;
   border-radius: 6px;
   margin-bottom: 10px;
 }
 
-/* Modal Footer */
-#modal-footer-todo-list {
+#modal-footer-todo-list,
+#modal-footer-todo {
   display: flex;
 }
 
-/* Cancel and Add buttons */
+#modal-todo-list-add,
 #modal-todo-list-cancel,
-#modal-todo-list-add {
-  height: 340x;
+#modal-todo-cancel,
+#modal-todo-add {
+  margin-right: 10px;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-#modal-todo-list-add {
-  margin-right: 10px;
-}
-
 #modal-todo-list-cancel:hover,
-#modal-todo-list-add:hover {
+#modal-todo-list-add:hover,
+#modal-todo-cancel:hover,
+#modal-todo-add:hover {
   background-color: var(--secondary-dark);
   color: white;
 }

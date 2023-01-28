@@ -27,41 +27,32 @@ export default class Example {
     );
 
     Todo.add(
-        0,
-        "Ullamco.",
-        "Ullamco eiusmod incididunt in sunt exercitation enim.",
-        "Due date",
-        "Low",
-        false
-      );
+      0,
+      "Ullamco.",
+      "Ullamco eiusmod incididunt in sunt exercitation enim.",
+      "Due date",
+      "Low",
+      false
+    );
 
+    Todo.add(
+      0,
+      "More testttt",
+      "Pariatur pariatur labore minim duis laboris sint do consectetur cupidatat irure enim cupidatat.",
+      "Due date",
+      "High",
+      false
+    );
 
-      Todo.add(
-        0,
-        "More testttt",
-        "Pariatur pariatur labore minim duis laboris sint do consectetur cupidatat irure enim cupidatat.",
-        "Due date",
-        "High",
-        false
-      );
+    Todo.add(2, "Tassskkk", "Yeah", "Due date", "High", false);
 
-      Todo.add(
-        2,
-        "Tassskkk",
-        "Yeah",
-        "Due date",
-        "High",
-        false
-      );
-
-      Todo.add(
-        2,
-        "Another task",
-        "Pariatur pariatur labore minim.",
-        "Due date",
-        "Medium",
-        false
-      );
-
+    Todo.add(
+      2,
+      "Another todo",
+      "Pariatur pariatur labore minim.",
+      "Due date",
+      "Medium",
+      false
+    );
   }
 }
