@@ -25,12 +25,12 @@ export default class UI {
   }
 
   static initNavButtonsAll() {
-    const buttons = document.querySelectorAll(".nav-button");
-    buttons.forEach((button) => {
-      button.addEventListener("click", (event) => {
+    document.addEventListener("click", (event) => {
+      if (event.target.matches(".nav-button")) {
+        const buttons = document.querySelectorAll(".nav-button");
         buttons.forEach((b) => b.classList.remove("active"));
         event.target.classList.add("active");
-      });
+      }
     });
   }
 
@@ -46,13 +46,27 @@ export default class UI {
     todoListElem.textContent = "";
 
     for (let i = 1; i < TodoList.instances.length; i += 1) {
+      const container = document.createElement("div");
+      container.classList.add("todo-list-container");
+
       const button = document.createElement("button");
       button.innerText = `${TodoList.instances[i].name}`;
       button.classList.add("nav-button");
-      todoListElem.appendChild(button);
+      container.appendChild(button);
       button.addEventListener("click", () => {
         UI.displayTodos("todoListId", TodoList.instances[i].id);
       });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.innerHTML = '<i class="fa fa-times"></i>';
+      deleteButton.classList.add("delete-button");
+      container.appendChild(deleteButton);
+      deleteButton.addEventListener("click", () => {
+        TodoList.remove(TodoList.instances[i].id);
+        console.log("remove");
+        UI.initTodoListButtons();
+      });
+      todoListElem.appendChild(container);
     }
   }
 
@@ -61,6 +75,7 @@ export default class UI {
     addTodoButton.addEventListener("click", (event) => {
       const nav = document.getElementById("modal-todo-list");
       nav.classList.toggle("active");
+      console.log("works");
     });
   }
 
@@ -71,17 +86,17 @@ export default class UI {
 
   static initAddTodoListModal() {
     const addTodoListButton = document.getElementById("modal-todo-list-add");
-    addTodoListButton.addEventListener("click", UI.handleAddTodoListModal);
+    addTodoListButton.addEventListener("click", UI.handleAddTodoList);
   }
 
-  static handleAddTodoListModal() {
+  static handleAddTodoList() {
     const { value } = document.getElementById("todo-list-name-input");
     if (value !== "") {
       TodoList.add(value);
       const addTodoListModal = document.getElementById("modal-todo-list");
-      document.getElementById("todo-list-name-input").value = "";
       addTodoListModal.classList.toggle("active");
-      UI.initButtons()
+      document.getElementById("todo-list-name-input").value = "";
+      UI.initTodoListButtons();
     }
   }
 
@@ -105,6 +120,7 @@ export default class UI {
         for (let j = 0; j < keys.length; j += 1) {
           innerHTML += `${keys[j]}: ${Todo.instances[i][keys[j]]}<br>`;
         }
+        innerHTML += `<br>`;
       }
     }
     if (innerHTML === "") {

@@ -87,6 +87,11 @@ input {
   text-align: left;
 }
 
+.nav-button,
+.delete-button {
+  width: auto;
+}
+
 .nav-button.active,
 .nav-button:hover {
   background-color: #ccc;
@@ -103,6 +108,11 @@ input {
 
 .default-todo-list {
   margin-bottom: 20px;
+}
+
+.todo-list-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 #main {

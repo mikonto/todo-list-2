@@ -10,6 +10,13 @@ export default class Todo {
 
   static instances = [];
 
+  static init() {
+    if (localStorage.getItem("todos")) {
+      Todo.instances = JSON.parse(localStorage.getItem("todos"))
+      console.log("localstorage is NOT empty")
+    }
+  }
+
   static add(todoListId, title, description, dueDate, priority, finished) {
     const todo = new Todo(
       todoListId,
@@ -20,5 +27,10 @@ export default class Todo {
       finished
     );
     Todo.instances.push(todo);
+    Todo.save();
+  }
+
+  static save() {
+    localStorage.setItem("todos", JSON.stringify(Todo.instances));
   }
 }
