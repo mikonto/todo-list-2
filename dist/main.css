@@ -1,8 +1,6 @@
 :root {
   --primary-dark: #393939;
-  /* --secondary-dark: #444; */
   --secondary-dark: #555;
-
   --primary-light: #eee;
   --secondary-light: #ddd;
 }
@@ -12,10 +10,16 @@
 }
 
 body {
+  min-height: 100vh;
   font-family: "Roboto", sans-serif;
   color: var(--primary-dark);
-  width: 100vw;
-  height: 100vh;
+  display: grid;
+  grid-template-rows: 80px calc(100vh - 80px - 50px) 50px;
+  grid-template-columns: 250px calc(100% - 250px);
+  grid-template-areas:
+    "header header"
+    "nav main"
+    "footer footer";
 }
 
 button {
@@ -34,19 +38,6 @@ input {
   outline: none;
 }
 
-/* The grid container */
-#grid-container {
-  display: grid;
-  min-height: 100%;
-  grid-template-rows: 80px calc(100vh - 80px - 50px) 50px;
-  grid-template-columns: 250px calc(100% - 250px);
-  grid-template-areas:
-    "header header"
-    "nav main"
-    "footer footer";
-}
-
-/* Style the header */
 #header {
   display: flex;
   justify-content: space-between;
@@ -63,7 +54,7 @@ input {
   color: #eee;
 }
 
-#header button {
+#header__toggle-nav {
   all: unset;
   cursor: pointer;
   color: #eee;
@@ -72,7 +63,6 @@ input {
 
 #nav {
   width: 250px;
-  /* min-width: 250px; */
   padding: 20px;
   grid-area: nav;
   background-color: var(--secondary-light);
@@ -82,27 +72,19 @@ input {
   display: block;
 }
 
-#default-todo-list > button,
-#todo-lists > button {
+#nav__static > button,
+#nav__dynamic > button {
   text-align: left;
   width: 100%;
 }
 
-/* #default-todo-list > button.active,
-#todo-lists > button.active,
-#default-todo-list > button:hover,
-#todo-lists > button:hover {
-  background-color: #ccc;
-  font-weight: bold;
-} */
-
-.nav-button:hover,
-.nav-button.active {
+.nav__button:hover,
+.nav__button.active {
   background-color: #ccc;
   font-weight: bold;
 }
 
-#todo-lists > button {
+#nav__dynamic > button {
   display: flex;
   justify-content: space-between;
 }
@@ -131,7 +113,7 @@ input {
   font-size: 22px;
 }
 
-#default-todo-list {
+#nav__static {
   margin-bottom: 20px;
 }
 
@@ -141,6 +123,8 @@ input {
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
+  height: 100%;
+  overflow: auto;
 }
 
 #add-todo-button {
@@ -158,18 +142,17 @@ input {
 }
 
 #footer p {
-  /* margin: 0; */
   vertical-align: middle;
 }
 
 /* Responsive layout*/
 @media (max-width: 650px) {
-  #grid-container {
+  body {
     grid-template-areas:
-      "header header header header header"
-      "nav nav nav nav nav"
-      "main main main main main"
-      "footer footer footer footer footer";
+      "header header"
+      "nav nav"
+      "main main"
+      "footer footer";
     grid-template-rows: 80px max-content auto 50px;
   }
 
@@ -185,8 +168,8 @@ input {
 
 /* ----------------------------------------------------------- */
 
-#modal-todo-list,
-#modal-todo {
+#modal__todolist,
+#modal__todo {
   display: none;
   position: fixed;
   z-index: 1;
@@ -198,17 +181,17 @@ input {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-#modal-todo {
+#modal__todo {
   display: none;
 }
 
-#modal-todo-list.active,
-#modal-todo.active {
+#modal__todolist.active,
+#modal__todo.active {
   display: block;
 }
 
-#modal-content-todo-list,
-#modal-content-todo {
+#modal__todolist__content,
+#modal__todo__content {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
@@ -216,43 +199,43 @@ input {
   border-radius: 6px;
 }
 
-#modal-header-todo-list,
-#modal-header-todo {
+#modal__todolist__header,
+#modal__todo__header {
   font-size: 22px;
   margin-bottom: 10px;
 }
 
-#modal-body-todo-list,
-#modal-body-todo {
+#modal__todolist__body,
+#modal__todo__body {
   margin-bottom: 10px;
 }
 
-#modal-body-todo > *,
-#modal-body-todo-list > * {
+#modal__todo__body > *,
+#modal__todolist__body > * {
   padding: 10px 20px;
   border: solid rgba(0, 0, 0, 0.4) 1px;
   border-radius: 6px;
   margin-bottom: 10px;
 }
 
-#modal-footer-todo-list,
-#modal-footer-todo {
+#modal__todolist__footer,
+#modal__todo__footer {
   display: flex;
 }
 
-#modal-todo-list-add,
-#modal-todo-list-cancel,
-#modal-todo-cancel,
-#modal-todo-add {
+#modal__todolist__add,
+#modal__todolist__cancel,
+#modal__todo__cancel,
+#modal__todo__add {
   margin-right: 10px;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-#modal-todo-list-cancel:hover,
-#modal-todo-list-add:hover,
-#modal-todo-cancel:hover,
-#modal-todo-add:hover {
+#modal__todolist__cancel:hover,
+#modal__todolist__add:hover,
+#modal__todo__cancel:hover,
+#modal__todo__add:hover {
   background-color: var(--secondary-dark);
   color: white;
 }

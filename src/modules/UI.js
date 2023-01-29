@@ -18,7 +18,7 @@ export default class UI {
   }
 
   static initMenuButton() {
-    const menuBtn = document.getElementsByClassName("fa-bars")[0];
+    const menuBtn = document.getElementById("header__toggle-nav");
     menuBtn.addEventListener("click", (event) => {
       const nav = document.getElementById("nav");
       nav.classList.toggle("active");
@@ -27,8 +27,8 @@ export default class UI {
 
   static initNavButtonsAll() {
     document.addEventListener("click", (event) => {
-      if (event.target.matches(".nav-button")) {
-        const buttons = document.querySelectorAll(".nav-button");
+      if (event.target.matches(".nav__button")) {
+        const buttons = document.querySelectorAll(".nav__button");
         buttons.forEach((b) => b.classList.remove("active"));
         event.target.classList.add("active");
       }
@@ -36,18 +36,18 @@ export default class UI {
   }
 
   static initDefaultTodoListButtons() {
-    const inbox = document.getElementById("inbox");
+    const inbox = document.getElementById("nav__static__inbox");
     inbox.addEventListener("click", () => {
       UI.displayTodos("todoListId", TodoList.instances[0].id);
     });
   }
 
   static initTodoListButtons() {
-    const todoListElement = document.getElementById("todo-lists");
+    const todoListElement = document.getElementById("nav__dynamic");
     todoListElement.textContent = "";
     for (let i = 1; i < TodoList.instances.length; i += 1) {
       const navButton = document.createElement("button");
-      navButton.classList.add("nav-button");
+      navButton.classList.add("nav__button");
 
       const todoListName = document.createElement("button");
       todoListName.innerText = `${TodoList.instances[i].name}`;
@@ -70,9 +70,9 @@ export default class UI {
   }
 
   static initAddTodoListButton() {
-    const addTodoButton = document.getElementById("button-add-todo-list");
+    const addTodoButton = document.getElementById("nav__add");
     addTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal-todo-list");
+      const nav = document.getElementById("modal__todolist");
       nav.classList.toggle("active");
     });
   }
@@ -83,39 +83,39 @@ export default class UI {
   }
 
   static initAddTodoListModal() {
-    const addTodoListButton = document.getElementById("modal-todo-list-add");
+    const addTodoListButton = document.getElementById("modal__todolist__add");
     addTodoListButton.addEventListener("click", UI.handleAddTodoList);
   }
 
   static handleAddTodoList() {
-    const { value } = document.getElementById("todo-list-name-input");
+    const { value } = document.getElementById("modal__todolist__input--name");
     if (value !== "") {
       TodoList.add(value);
-      const addTodoListModal = document.getElementById("modal-todo-list");
+      const addTodoListModal = document.getElementById("modal__todolist");
       addTodoListModal.classList.toggle("active");
-      document.getElementById("todo-list-name-input").value = "";
+      document.getElementById("modal__todolist__input--name").value = "";
       UI.initTodoListButtons();
       UI.makeLastTodoListActive();
     }
   }
 
   static makeLastTodoListActive() {
-    document.querySelectorAll(".nav-button").forEach((element) => {
+    document.querySelectorAll(".nav__button").forEach((element) => {
       element.classList.remove("active");
     });
 
-    const lastChild = document.querySelector("#todo-lists").lastElementChild;
+    const lastChild = document.querySelector("#nav__dynamic").lastElementChild;
     lastChild.classList.add("active");
   }
 
   static initCancelTodoListModal() {
     const cancelTodoListButton = document.getElementById(
-      "modal-todo-list-cancel"
+      "modal__todolist__cancel"
     );
     cancelTodoListButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal-todo-list");
+      const nav = document.getElementById("modal__todolist");
       nav.classList.toggle("active");
-      document.getElementById("todo-list-name-input").value = "";
+      document.getElementById("modal__todolist__input--name").value = "";
     });
   }
 
@@ -158,7 +158,7 @@ export default class UI {
   static initAddTodoButton() {
     const addTodoButton = document.getElementById("add-todo-button");
     addTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal-todo");
+      const nav = document.getElementById("modal__todo");
       nav.classList.toggle("active");
     });
   }
@@ -169,7 +169,7 @@ export default class UI {
   }
 
   static initAddTodoModal() {
-    const addTodoButton = document.getElementById("modal-todo-add");
+    const addTodoButton = document.getElementById("modal__todo__add");
     addTodoButton.addEventListener("click", UI.handleAddTodo);
   }
 
@@ -186,19 +186,19 @@ export default class UI {
       "priority",
       false
     );
-    const addTodoModal = document.getElementById("modal-todo");
+    const addTodoModal = document.getElementById("modal__todo");
     addTodoModal.classList.toggle("active");
     todoElement.value = "";
     UI.displayTodos(dataTodoKey, dataTodoValue);
   }
 
   static initCancelTodoModal() {
-    const cancelTodoButton = document.getElementById("modal-todo-cancel");
+    const cancelTodoButton = document.getElementById("modal__todo__cancel");
 
     cancelTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal-todo");
+      const nav = document.getElementById("modal__todo");
       nav.classList.toggle("active");
-      document.getElementById("todo-name-input").value = "";
+      document.getElementById("modal__todo__input--name").value = "";
     });
   }
 }

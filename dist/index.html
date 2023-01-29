@@ -22,91 +22,90 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="grid-container">
-      <header id="header">
-        <h1><i class="fa-regular fa-circle-check"></i> Todo</h1>
-        <button>
-          <i class="fas fa-bars"></i>
+    <header id="header">
+      <h1><i class="fa-regular fa-circle-check"></i> Todo</h1>
+      <button id="header__toggle-nav">
+        <i class="fas fa-bars"></i>
+      </button>
+    </header>
+
+    <nav id="nav">
+      <div id="nav__static">
+        <button id="nav__static__inbox" class="nav__button active">
+          <i class="fas fa-inbox"></i>
+          Inbox
         </button>
-      </header>
-
-      <nav id="nav">
-        <!-- Default todo-list -->
-        <div id="default-todo-list">
-          <button id="inbox" class="nav-button active">
-            <i class="fas fa-inbox"></i>
-            Inbox
-          </button>
-          <button id="today" class="nav-button">
-            <i class="fas fa-calendar-day"></i>
-            Today
-          </button>
-          <button id="this-week" class="nav-button">
-            <i class="fas fa-calendar-week"></i>
-            This week
-          </button>
-        </div>
-
-        <!-- Todo-list -->
-        <h1 class="todo-lists-title">Todo-Lists</h1>
-        <div id="todo-lists" class="todo-lists"></div>
-        <button id="button-add-todo-list" class="button-add-todo-list">
-          <i class="fas fa-plus"></i>
-          Add Todo-List
+        <button id="nav__static__today" class="nav__button">
+          <i class="fas fa-calendar-day"></i>
+          Today
         </button>
-      </nav>
+        <button id="nav__static__this-week" class="nav__button">
+          <i class="fas fa-calendar-week"></i>
+          This week
+        </button>
+      </div>
 
-      <main id="main"></main>
+      <h1 class="nav__h1">Todo-Lists</h1>
+      <div id="nav__dynamic"></div>
+      <button id="nav__add" class="nav__add">
+        <i class="fas fa-plus"></i>
+        Add Todo-List
+      </button>
+    </nav>
 
-      <footer id="footer">
-        <p>Mikonto</p>
-      </footer>
-    </div>
-    <script src="main.js"></script>
+    <main id="main"></main>
 
-    <div id="modal-todo-list">
-      <div id="modal-content-todo-list">
-        <div id="modal-header-todo-list">Add Todolist</div>
-        <div id="modal-body-todo-list">
+    <div id="modal__todolist">
+      <div id="modal__todolist__content">
+        <div id="modal__todolist__header">Add Todolist</div>
+        <div id="modal__todolist__body">
           <input
             type="text"
-            id="todo-list-name-input"
+            id="modal__todolist__input--name"
             placeholder="Enter todo-list name"
           />
         </div>
-        <div id="modal-footer-todo-list">
-          <button id="modal-todo-list-add">Add</button>
-          <button id="modal-todo-list-cancel">Cancel</button>
+        <div id="modal__todolist__footer">
+          <button id="modal__todolist__add">Add</button>
+          <button id="modal__todolist__cancel">Cancel</button>
         </div>
       </div>
     </div>
 
-    <div id="modal-todo">
-      <div id="modal-content-todo">
-        <div id="modal-header-todo">Add Todo</div>
-        <div id="modal-body-todo">
-          <input type="text" id="todo-name-input" placeholder="Enter title" />
+    <div id="modal__todo">
+      <div id="modal__todo__content">
+        <div id="modal__todo__header">Add Todo</div>
+        <div id="modal__todo__body">
           <input
             type="text"
-            id="todo-description-input"
+            id="modal__todo__input--name"
+            placeholder="Enter title"
+          />
+          <input
+            type="text"
+            id="modal__todo__input--description"
             placeholder="Enter description"
           />
           <input
             type="text"
-            id="todo-duedate-input"
+            id="modal__todo__input--duedate"
             placeholder="Enter due date"
           />
           <input
             type="text"
-            id="todo-priority-input"
+            id="modal__todo__input--priority"
             placeholder="Enter priority"
           />
         </div>
-        <div id="modal-footer-todo">
-          <button id="modal-todo-add">Add</button>
-          <button id="modal-todo-cancel">Cancel</button>
+        <div id="modal__todo__footer">
+          <button id="modal__todo__add">Add</button>
+          <button id="modal__todo__cancel">Cancel</button>
         </div>
       </div>
     </div>
+    <footer id="footer">
+      <p>Mikonto</p>
+    </footer>
+    <script src="main.js"></script>
   </body>
 </html>

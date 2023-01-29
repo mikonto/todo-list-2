@@ -6,18 +6,7 @@ export default class TodoList {
     this.name = name;
   }
 
-  static instances = localStorage.getItem("todoLists")
-    ? JSON.parse(localStorage.getItem("todoLists"))
-    : [];
-
-  static init() {
-    if (!localStorage.getItem("todoLists")) {
-      TodoList.instances = [];
-    }
-    if (TodoList.instances.length === 0) {
-      TodoList.add("Inbox");
-    }
-  }
+  static instances = [];
 
   static generateUniqueId() {
     const uniqueId = Math.floor(Math.random() * 1000000000);
@@ -27,7 +16,6 @@ export default class TodoList {
   static add(name) {
     const todoList = new TodoList(name);
     TodoList.instances.push(todoList);
-    TodoList.save();
   }
 
   static remove(id) {
@@ -35,11 +23,5 @@ export default class TodoList {
       (instance) => instance.id !== id
     );
     Todo.instances = Todo.instances.filter((todo) => todo.todoListId !== id);
-    TodoList.save();
-    Todo.save();
-  }
-
-  static save() {
-    localStorage.setItem("todoLists", JSON.stringify(TodoList.instances));
   }
 }
