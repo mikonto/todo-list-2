@@ -21,4 +21,8 @@ export default class Todo {
     );
     Todo.instances.push(todo);
   }
+
+  static removeInstances(key, value) {
+    Todo.instances = Todo.instances.filter((todo) => todo[key] !== value);
+  }
 }

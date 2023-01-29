@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <div id="modal__todo">
+    <!-- <div id="modal__todo">
       <div id="modal__todo__content">
         <div id="modal__todo__header">Add Todo</div>
         <div id="modal__todo__body">
@@ -102,7 +102,42 @@
           <button id="modal__todo__cancel">Cancel</button>
         </div>
       </div>
+    </div> -->
+
+    <div id="modal__todo">
+      <div id="modal__todo__content">
+        <div id="modal__todo__header">Add Todo</div>
+        <div id="modal__todo__body">
+          <input
+            type="text"
+            id="modal__todo__input--title"
+            placeholder="Enter title"
+          />
+          <input
+            type="text"
+            id="modal__todo__input--description"
+            placeholder="Enter description"
+          />
+          <input
+            type="date"
+            id="modal__todo__input--duedate"
+            placeholder="Enter due date"
+          />
+          <select id="modal__todo__input--priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div id="modal__todo__footer">
+          <button id="modal__todo__add">Add</button>
+          <button id="modal__todo__cancel">Cancel</button>
+        </div>
+      </div>
     </div>
+
+
+
     <footer id="footer">
       <p>Mikonto</p>
     </footer>

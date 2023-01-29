@@ -24,7 +24,7 @@ body {
 
 button {
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   background-color: var(--secondary-light);
 }
@@ -89,14 +89,14 @@ input {
   justify-content: space-between;
 }
 
-.todo-list-name {
+.nav__dynamic__todolist__name {
   margin: 0;
   padding: 0;
   background-color: transparent;
   font-weight: inherit;
 }
 
-.todo-list-delete {
+.nav__dynamic__todolist__delete {
   width: 16px;
   margin: 0;
   padding: 0;
@@ -238,4 +238,41 @@ input {
 #modal__todo__add:hover {
   background-color: var(--secondary-dark);
   color: white;
+}
+
+/* ------------------------- */
+
+table {
+  width: 100%;
+  border-radius: 5px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead {
+  background-color: var(--primary-dark);
+  color: #eee;
+}
+
+th,
+td {
+  padding: 12px 20px;
+  /* border: 1px solid var(--secondary-dark); */
+  text-align: left;
+}
+
+tbody {
+  background-color: var(--secondary-light);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--primary-light);
+}
+
+table td:first-child,
+table th:first-child,
+table td:last-child,
+table th:last-child {
+  width: 50px;
+  text-align: center;
 }

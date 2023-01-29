@@ -3,146 +3,154 @@ import Todo from "./todo";
 
 export default class UI {
   static loadHomepage() {
-    UI.initButtons();
     UI.displayTodos("todoListId", TodoList.instances[0].id);
+    UI.initButtons();
   }
 
   static initButtons() {
-    UI.initMenuButton();
-    UI.initNavButtonsAll();
-    UI.initDefaultTodoListButtons();
-    UI.initTodoListButtons();
-    UI.initAddTodoListButton();
+    UI.initToggleNav();
+    UI.initNavButtons();
+    UI.initStaticNav();
+    UI.initDynamicNav();
+    UI.initNavAdd();
     UI.initTodoListModal();
     UI.initTodoModal();
   }
 
-  static initMenuButton() {
-    const menuBtn = document.getElementById("header__toggle-nav");
-    menuBtn.addEventListener("click", (event) => {
+  static initToggleNav() {
+    const toggleNav = document.getElementById("header__toggle-nav");
+    toggleNav.addEventListener("click", (event) => {
       const nav = document.getElementById("nav");
       nav.classList.toggle("active");
     });
   }
 
-  static initNavButtonsAll() {
+  static initNavButtons() {
     document.addEventListener("click", (event) => {
       if (event.target.matches(".nav__button")) {
         const buttons = document.querySelectorAll(".nav__button");
         buttons.forEach((b) => b.classList.remove("active"));
-        event.target.classList.add("active");
+        event.target.closest(".nav__button").classList.add("active");
       }
     });
   }
 
-  static initDefaultTodoListButtons() {
+  static initStaticNav() {
     const inbox = document.getElementById("nav__static__inbox");
     inbox.addEventListener("click", () => {
       UI.displayTodos("todoListId", TodoList.instances[0].id);
     });
   }
 
-  static initTodoListButtons() {
-    const todoListElement = document.getElementById("nav__dynamic");
-    todoListElement.textContent = "";
-    for (let i = 1; i < TodoList.instances.length; i += 1) {
-      const navButton = document.createElement("button");
-      navButton.classList.add("nav__button");
+  static initDynamicNav() {
+    const dynamicNavContainer = document.getElementById("nav__dynamic");
+    dynamicNavContainer.innerHTML = "";
 
-      const todoListName = document.createElement("button");
-      todoListName.innerText = `${TodoList.instances[i].name}`;
-      todoListName.classList.add("todo-list-name");
-      navButton.appendChild(todoListName);
-      todoListName.addEventListener("click", () => {
-        UI.displayTodos("todoListId", TodoList.instances[i].id);
+    const todoLists = TodoList.instances.slice(1); // get all todo lists except the first one
+
+    todoLists.forEach((todoList) => {
+      const listContainer = document.createElement("button");
+      listContainer.classList.add("nav__dynamic__todolist");
+      listContainer.classList.add("nav__button");
+
+      const listName = document.createElement("button");
+      listName.innerText = todoList.name;
+      listName.classList.add("nav__dynamic__todolist__name");
+      listContainer.appendChild(listName);
+      listName.addEventListener("click", () => {
+        UI.displayTodos("todoListId", todoList.id);
       });
 
-      const todoListDelete = document.createElement("button");
-      todoListDelete.innerHTML = '<i class="fa fa-times"></i>';
-      todoListDelete.classList.add("todo-list-delete");
-      navButton.appendChild(todoListDelete);
-      todoListDelete.addEventListener("click", () => {
-        TodoList.remove(TodoList.instances[i].id);
-        UI.initTodoListButtons();
+      const listDelete = document.createElement("button");
+      listDelete.innerHTML = '<i class="fa fa-times"></i>';
+      listDelete.classList.add("nav__dynamic__todolist__delete");
+
+      listDelete.addEventListener("click", () => {
+        Todo.removeInstances("todoListId", todoList.id.toString());
+        TodoList.remove(todoList.id);
+
+        UI.displayTodos("todoListId", TodoList.instances[0].id.toString());
+        UI.initNavButtons();
+        UI.initDynamicNav();
+        UI.makeTodoListNavActive(0);
       });
-      todoListElement.appendChild(navButton);
-    }
-  }
+      listContainer.appendChild(listDelete);
 
-  static initAddTodoListButton() {
-    const addTodoButton = document.getElementById("nav__add");
-    addTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal__todolist");
-      nav.classList.toggle("active");
+      dynamicNavContainer.appendChild(listContainer);
     });
   }
 
-  static initTodoListModal() {
-    UI.initAddTodoListModal();
-    UI.initCancelTodoListModal();
-  }
-
-  static initAddTodoListModal() {
-    const addTodoListButton = document.getElementById("modal__todolist__add");
-    addTodoListButton.addEventListener("click", UI.handleAddTodoList);
-  }
-
-  static handleAddTodoList() {
-    const { value } = document.getElementById("modal__todolist__input--name");
-    if (value !== "") {
-      TodoList.add(value);
-      const addTodoListModal = document.getElementById("modal__todolist");
-      addTodoListModal.classList.toggle("active");
-      document.getElementById("modal__todolist__input--name").value = "";
-      UI.initTodoListButtons();
-      UI.makeLastTodoListActive();
-    }
-  }
-
-  static makeLastTodoListActive() {
-    document.querySelectorAll(".nav__button").forEach((element) => {
-      element.classList.remove("active");
-    });
-
-    const lastChild = document.querySelector("#nav__dynamic").lastElementChild;
-    lastChild.classList.add("active");
-  }
-
-  static initCancelTodoListModal() {
-    const cancelTodoListButton = document.getElementById(
-      "modal__todolist__cancel"
-    );
-    cancelTodoListButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal__todolist");
-      nav.classList.toggle("active");
-      document.getElementById("modal__todolist__input--name").value = "";
+  static initNavAdd() {
+    const addButton = document.getElementById("nav__add");
+    addButton.addEventListener("click", (event) => {
+      UI.toggleModal("modal__todolist");
     });
   }
+
+  // static displayTodos(todoKey, todoValue) {
+  //   const mainContainer = document.getElementById("main");
+  //   mainContainer.innerHTML = "";
+  //   let innerHTML = "";
+
+  //   for (let i = 0; i < Todo.instances.length; i += 1) {
+  //     if (Todo.instances[i][todoKey] === todoValue.toString()) {
+  //       const keys = Object.keys(Todo.instances[i]);
+  //       for (let j = 0; j < keys.length; j += 1) {
+  //         innerHTML += `${keys[j]}: ${Todo.instances[i][keys[j]]}<br>`;
+  //       }
+  //       innerHTML += `<br>`;
+  //     }
+  //   }
+
+  //   if (innerHTML === "") {
+  //     innerHTML = "No todos";
+  //   }
+
+  //   const todoDiv = document.createElement("div");
+  //   todoDiv.innerHTML = innerHTML;
+  //   todoDiv.setAttribute("id", "todo");
+  //   todoDiv.dataset.todoKey = todoKey;
+  //   todoDiv.dataset.todoValue = todoValue.toString();
+  //   mainContainer.appendChild(todoDiv);
+
+  //   const addTodoButton = document.createElement("button");
+  //   const addTodoButtonText = document.createTextNode("Add todo");
+  //   const addTodoButtonIcon = document.createElement("i");
+  //   addTodoButtonIcon.classList.add("fas", "fa-plus");
+  //   addTodoButton.appendChild(addTodoButtonIcon);
+  //   addTodoButton.appendChild(addTodoButtonText);
+  //   addTodoButton.setAttribute("id", "add-todo-button");
+
+  //   mainContainer.appendChild(addTodoButton);
+
+  //   UI.initTodoAdd();
+  // }
 
   static displayTodos(todoKey, todoValue) {
-    const mainSection = document.getElementById("main");
-    mainSection.innerHTML = "";
-    let innerHTML = "";
+    const mainContainer = document.getElementById("main");
+    mainContainer.innerHTML = "";
+    let innerHTML = `<table><tr><th></th><th>Title</th><th>Description</th><th>Due Date</th><th>Priority</th><th></th></tr>`;
+    let tableExists = false;
+
     for (let i = 0; i < Todo.instances.length; i += 1) {
-      if (Todo.instances[i][todoKey] === todoValue) {
-        const keys = Object.keys(Todo.instances[i]);
-        for (let j = 0; j < keys.length; j += 1) {
-          innerHTML += `${keys[j]}: ${Todo.instances[i][keys[j]]}<br>`;
-        }
-        innerHTML += `<br>`;
+      if (Todo.instances[i][todoKey] === todoValue.toString()) {
+        tableExists = true;
+        innerHTML += `<tr><td><i class="fa-regular fa-circle"></i></td><td>${Todo.instances[i].title}</td><td>${Todo.instances[i].description}</td><td>${Todo.instances[i].dueDate}</td><td>${Todo.instances[i].priority}</td><td><i class="fas fa-plus"></i></td></tr>`;
       }
     }
-    if (innerHTML === "") {
+
+    if (!tableExists) {
       innerHTML = "No todos";
+    } else {
+      innerHTML += `</table>`;
     }
+
     const todoDiv = document.createElement("div");
     todoDiv.innerHTML = innerHTML;
     todoDiv.setAttribute("id", "todo");
-
     todoDiv.dataset.todoKey = todoKey;
-    todoDiv.dataset.todoValue = todoValue;
-
-    mainSection.appendChild(todoDiv);
+    todoDiv.dataset.todoValue = todoValue.toString();
+    mainContainer.appendChild(todoDiv);
 
     const addTodoButton = document.createElement("button");
     const addTodoButtonText = document.createTextNode("Add todo");
@@ -151,54 +159,118 @@ export default class UI {
     addTodoButton.appendChild(addTodoButtonIcon);
     addTodoButton.appendChild(addTodoButtonText);
     addTodoButton.setAttribute("id", "add-todo-button");
-    mainSection.appendChild(addTodoButton);
-    UI.initAddTodoButton();
+
+    mainContainer.appendChild(addTodoButton);
+
+    const todoTable = document.querySelector("table");
+    if (todoTable) {
+      const todoCircles = todoTable.getElementsByClassName("fa-circle");
+      for (let i = 0; i < todoCircles.length; i += 1) {
+        todoCircles[i].addEventListener("click", () => {
+          console.log(Todo.instances[i]);
+        });
+      }
+
+      const todoPlus = todoTable.getElementsByClassName("fa-plus");
+      for (let i = 0; i < todoPlus.length; i += 1) {
+        todoPlus[i].addEventListener("click", () => {
+          console.log(Todo.instances[i]);
+        });
+      }
+    }
+
+    UI.initTodoAdd();
   }
 
-  static initAddTodoButton() {
+  static initTodoAdd() {
     const addTodoButton = document.getElementById("add-todo-button");
+
     addTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal__todo");
-      nav.classList.toggle("active");
+      UI.toggleModal("modal__todo");
     });
   }
+
+  // -------------------------- //
+
+  static initTodoListModal() {
+    const addButton = document.getElementById("modal__todolist__add");
+    addButton.addEventListener("click", UI.addTodoListFromModal);
+
+    const cancelButton = document.getElementById("modal__todolist__cancel");
+
+    cancelButton.addEventListener("click", (event) => {
+      document.getElementById("modal__todolist__input--name").value = "";
+      UI.toggleModal("modal__todolist");
+    });
+  }
+
+  static addTodoListFromModal() {
+    const { value } = document.getElementById("modal__todolist__input--name");
+    if (value !== "") {
+      TodoList.add(value);
+      document.getElementById("modal__todolist__input--name").value = "";
+
+      UI.initDynamicNav();
+      UI.makeTodoListNavActive(TodoList.instances.length + 1);
+
+      const todoListId = TodoList.instances[TodoList.instances.length - 1].id;
+
+      UI.displayTodos("todoListId", todoListId);
+      UI.toggleModal("modal__todolist");
+    }
+  }
+
+  static makeTodoListNavActive(arrayIndex) {
+    document.querySelectorAll(".nav__button").forEach((element) => {
+      element.classList.remove("active");
+    });
+
+    const navButton = document.querySelectorAll(".nav__button")[arrayIndex];
+    navButton.classList.add("active");
+  }
+
+  static toggleModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.toggle("active");
+  }
+
+  // -------------------------------------
 
   static initTodoModal() {
-    UI.initAddTodoModal();
-    UI.initCancelTodoModal();
-  }
+    const addButton = document.getElementById("modal__todo__add");
+    addButton.addEventListener("click", UI.addTodoFromModal);
 
-  static initAddTodoModal() {
-    const addTodoButton = document.getElementById("modal__todo__add");
-    addTodoButton.addEventListener("click", UI.handleAddTodo);
-  }
+    const cancelButton = document.getElementById("modal__todo__cancel");
 
-  static handleAddTodo() {
-    const todoElement = document.querySelector("#todo");
-    const dataTodoKey = todoElement.getAttribute("data-todo-key");
-    const dataTodoValue = todoElement.getAttribute("data-todo-value");
-    Todo.add(
-      dataTodoValue,
-      "name",
-      "title",
-      "description",
-      "due date",
-      "priority",
-      false
-    );
-    const addTodoModal = document.getElementById("modal__todo");
-    addTodoModal.classList.toggle("active");
-    todoElement.value = "";
-    UI.displayTodos(dataTodoKey, dataTodoValue);
-  }
-
-  static initCancelTodoModal() {
-    const cancelTodoButton = document.getElementById("modal__todo__cancel");
-
-    cancelTodoButton.addEventListener("click", (event) => {
-      const nav = document.getElementById("modal__todo");
-      nav.classList.toggle("active");
-      document.getElementById("modal__todo__input--name").value = "";
+    cancelButton.addEventListener("click", (event) => {
+      document.getElementById("modal__todo__input--title").value = "";
+      UI.toggleModal("modal__todo");
     });
+  }
+
+  static addTodoFromModal() {
+    const todo = document.querySelector("#todo");
+    const dataTodoKey = todo.getAttribute("data-todo-key");
+    const dataTodoValue = todo.getAttribute("data-todo-value");
+
+    const titleInput = document.getElementById("modal__todo__input--title");
+    const title = titleInput.value;
+    const descriptionInput = document.getElementById(
+      "modal__todo__input--description"
+    );
+    const description = descriptionInput.value;
+
+    const dueDateInput = document.getElementById("modal__todo__input--duedate");
+    const dueDate = dueDateInput.value;
+
+    const priorityInput = document.getElementById(
+      "modal__todo__input--priority"
+    );
+    const priority = priorityInput.value;
+
+    Todo.add(dataTodoValue, title, description, dueDate, priority, false);
+
+    UI.displayTodos(dataTodoKey, dataTodoValue);
+    UI.toggleModal("modal__todo");
   }
 }
