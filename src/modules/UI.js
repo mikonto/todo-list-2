@@ -1,9 +1,11 @@
+import { format } from "date-fns";
 import TodoList from "./todoList";
 import Todo from "./todo";
 
 export default class UI {
   static loadHomepage() {
-    UI.displayTodos("todoListId", TodoList.instances[0].id);
+    UI.displayMainBody("todoListId", TodoList.instances[0].id, false);
+    UI.initTodoAdd();
     UI.initButtons();
   }
 
@@ -12,7 +14,7 @@ export default class UI {
     UI.initNavButtons();
     UI.initStaticNav();
     UI.initDynamicNav();
-    UI.initNavAdd();
+    UI.initTodoListAdd();
     UI.initTodoListModal();
     UI.initTodoModal();
   }
@@ -38,7 +40,37 @@ export default class UI {
   static initStaticNav() {
     const inbox = document.getElementById("nav__static__inbox");
     inbox.addEventListener("click", () => {
-      UI.displayTodos("todoListId", TodoList.instances[0].id);
+      UI.displayMainHeader(TodoList.instances[0].id);
+      UI.displayMainBody("todoListId", TodoList.instances[0].id, false);
+      UI.initTodoAdd();
+    });
+
+    const today = document.getElementById("nav__static__today");
+    today.addEventListener("click", () => {
+      UI.displayMainHeader("Today");
+
+      const todayDate = format(new Date(), "yyyy-MM-dd").toString();
+      UI.displayMainBody("dueDate", todayDate, false);
+
+      const footer = document.getElementById("main__footer");
+      footer.innerHTML = "";
+    });
+
+    const thisWeek = document.getElementById("nav__static__this-week");
+    thisWeek.addEventListener("click", () => {
+      UI.displayMainHeader("This week");
+      UI.displayMainBody("dueDateWithinWeek", true, false);
+      const footer = document.getElementById("main__footer");
+      footer.innerHTML = "";
+    });
+
+    const completed = document.getElementById("nav__static__completed");
+    completed.addEventListener("click", () => {
+      UI.displayMainHeader("Completed");
+      UI.displayMainBody("finished", true, true);
+
+      const footer = document.getElementById("main__footer");
+      footer.innerHTML = "";
     });
   }
 
@@ -57,8 +89,15 @@ export default class UI {
       listName.innerText = todoList.name;
       listName.classList.add("nav__dynamic__todolist__name");
       listContainer.appendChild(listName);
-      listName.addEventListener("click", () => {
-        UI.displayTodos("todoListId", todoList.id);
+      listContainer.addEventListener("click", (event) => {
+        if (event.target === listContainer || event.target === listName) {
+          const buttons = document.querySelectorAll(".nav__button");
+          buttons.forEach((b) => b.classList.remove("active"));
+          event.target.closest(".nav__button").classList.add("active");
+          UI.displayMainHeader(todoList.id);
+          UI.displayMainBody("todoListId", todoList.id, false);
+          UI.initTodoAdd();
+        }
       });
 
       const listDelete = document.createElement("button");
@@ -66,10 +105,13 @@ export default class UI {
       listDelete.classList.add("nav__dynamic__todolist__delete");
 
       listDelete.addEventListener("click", () => {
-        Todo.removeInstances("todoListId", todoList.id.toString());
+        Todo.removeMultipleInstances("todoListId", todoList.id);
+
         TodoList.remove(todoList.id);
 
-        UI.displayTodos("todoListId", TodoList.instances[0].id.toString());
+        UI.displayMainHeader(TodoList.instances[0].id);
+        UI.displayMainBody("todoListId", TodoList.instances[0].id, false);
+
         UI.initNavButtons();
         UI.initDynamicNav();
         UI.makeTodoListNavActive(0);
@@ -80,117 +122,145 @@ export default class UI {
     });
   }
 
-  static initNavAdd() {
+  static initTodoListAdd() {
     const addButton = document.getElementById("nav__add");
     addButton.addEventListener("click", (event) => {
       UI.toggleModal("modal__todolist");
     });
   }
 
-  // static displayTodos(todoKey, todoValue) {
-  //   const mainContainer = document.getElementById("main");
-  //   mainContainer.innerHTML = "";
-  //   let innerHTML = "";
-
-  //   for (let i = 0; i < Todo.instances.length; i += 1) {
-  //     if (Todo.instances[i][todoKey] === todoValue.toString()) {
-  //       const keys = Object.keys(Todo.instances[i]);
-  //       for (let j = 0; j < keys.length; j += 1) {
-  //         innerHTML += `${keys[j]}: ${Todo.instances[i][keys[j]]}<br>`;
-  //       }
-  //       innerHTML += `<br>`;
-  //     }
-  //   }
-
-  //   if (innerHTML === "") {
-  //     innerHTML = "No todos";
-  //   }
-
-  //   const todoDiv = document.createElement("div");
-  //   todoDiv.innerHTML = innerHTML;
-  //   todoDiv.setAttribute("id", "todo");
-  //   todoDiv.dataset.todoKey = todoKey;
-  //   todoDiv.dataset.todoValue = todoValue.toString();
-  //   mainContainer.appendChild(todoDiv);
-
-  //   const addTodoButton = document.createElement("button");
-  //   const addTodoButtonText = document.createTextNode("Add todo");
-  //   const addTodoButtonIcon = document.createElement("i");
-  //   addTodoButtonIcon.classList.add("fas", "fa-plus");
-  //   addTodoButton.appendChild(addTodoButtonIcon);
-  //   addTodoButton.appendChild(addTodoButtonText);
-  //   addTodoButton.setAttribute("id", "add-todo-button");
-
-  //   mainContainer.appendChild(addTodoButton);
-
-  //   UI.initTodoAdd();
-  // }
-
-  static displayTodos(todoKey, todoValue) {
-    const mainContainer = document.getElementById("main");
-    mainContainer.innerHTML = "";
-    let innerHTML = `<table><tr><th></th><th>Title</th><th>Description</th><th>Due Date</th><th>Priority</th><th></th></tr>`;
-    let tableExists = false;
-
-    for (let i = 0; i < Todo.instances.length; i += 1) {
-      if (Todo.instances[i][todoKey] === todoValue.toString()) {
-        tableExists = true;
-        innerHTML += `<tr><td><i class="fa-regular fa-circle"></i></td><td>${Todo.instances[i].title}</td><td>${Todo.instances[i].description}</td><td>${Todo.instances[i].dueDate}</td><td>${Todo.instances[i].priority}</td><td><i class="fas fa-plus"></i></td></tr>`;
-      }
-    }
-
-    if (!tableExists) {
-      innerHTML = "No todos";
+  static displayMainHeader(todoListId) {
+    const h1Element = document.querySelector("#main__header > h1");
+    if (
+      todoListId === "Today" ||
+      todoListId === "This week" ||
+      todoListId === "Completed"
+    ) {
+      h1Element.textContent = todoListId;
     } else {
-      innerHTML += `</table>`;
-    }
+      const todoList = TodoList.instances.find(
+        (instance) => instance.id === todoListId
+      );
 
-    const todoDiv = document.createElement("div");
-    todoDiv.innerHTML = innerHTML;
-    todoDiv.setAttribute("id", "todo");
-    todoDiv.dataset.todoKey = todoKey;
-    todoDiv.dataset.todoValue = todoValue.toString();
-    mainContainer.appendChild(todoDiv);
-
-    const addTodoButton = document.createElement("button");
-    const addTodoButtonText = document.createTextNode("Add todo");
-    const addTodoButtonIcon = document.createElement("i");
-    addTodoButtonIcon.classList.add("fas", "fa-plus");
-    addTodoButton.appendChild(addTodoButtonIcon);
-    addTodoButton.appendChild(addTodoButtonText);
-    addTodoButton.setAttribute("id", "add-todo-button");
-
-    mainContainer.appendChild(addTodoButton);
-
-    const todoTable = document.querySelector("table");
-    if (todoTable) {
-      const todoCircles = todoTable.getElementsByClassName("fa-circle");
-      for (let i = 0; i < todoCircles.length; i += 1) {
-        todoCircles[i].addEventListener("click", () => {
-          console.log(Todo.instances[i]);
-        });
-      }
-
-      const todoPlus = todoTable.getElementsByClassName("fa-plus");
-      for (let i = 0; i < todoPlus.length; i += 1) {
-        todoPlus[i].addEventListener("click", () => {
-          console.log(Todo.instances[i]);
-        });
+      if (todoList) {
+        h1Element.textContent = todoList.name;
       }
     }
+  }
 
-    UI.initTodoAdd();
+  static displayMainBody(todoKey, todoValue, finished) {
+    const mainBody = document.querySelector("#main__body__todos");
+    mainBody.innerHTML = "";
+    mainBody.dataset.todoKey = todoKey;
+    mainBody.dataset.todoValue = todoValue;
+
+    const noTodosElement = document.getElementById("main__body__no-todos");
+    const todosHeaderElement = document.getElementById(
+      "main__body__todos__header"
+    );
+
+    const todos = Todo.instances.filter(
+      (instance) =>
+        instance[todoKey] === todoValue && instance.finished === finished
+    );
+
+    if (todos.length === 0) {
+      noTodosElement.classList.add("active");
+      todosHeaderElement.classList.remove("active");
+    } else {
+      noTodosElement.classList.remove("active");
+      todosHeaderElement.classList.add("active");
+
+      todos.forEach((todo) => {
+        const todoRowDiv = document.createElement("div");
+        todoRowDiv.classList.add("main__body__todos__todo-row");
+
+        const checkboxDiv = document.createElement("div");
+        checkboxDiv.classList.add("main__body__todos__todo-row__checkbox");
+
+        const checkboxButton = document.createElement("button");
+        if (todo.finished === false) {
+          checkboxButton.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        } else if (todo.finished === true) {
+          checkboxButton.innerHTML =
+            '<i class="fa-regular fa-circle-check"></i>';
+        }
+
+        checkboxButton.addEventListener("click", () => {
+          if (todo.finished === true) {
+            checkboxButton.innerHTML = '<i class="fa-regular fa-circle"></i>';
+          } else if (todo.finished === false) {
+            checkboxButton.innerHTML =
+              '<i class="fa-regular fa-circle-check"></i>';
+          }
+
+          setTimeout(() => {
+            if (todo.finished === false) {
+              Todo.changeFinished(todo, true);
+            } else if (todo.finished === true) {
+              Todo.changeFinished(todo, false);
+            }
+
+            UI.displayMainBody(todoKey, todoValue, false);
+          }, 300);
+        });
+
+        checkboxDiv.appendChild(checkboxButton);
+
+        todoRowDiv.appendChild(checkboxDiv);
+
+        const titleDiv = document.createElement("div");
+        titleDiv.classList.add("main__body__todos__todo-row__title");
+        titleDiv.innerText = todo.title;
+        todoRowDiv.appendChild(titleDiv);
+
+        const descDiv = document.createElement("div");
+        descDiv.classList.add("main__body__todos__todo-row__description");
+        descDiv.innerText = todo.description;
+        todoRowDiv.appendChild(descDiv);
+
+        const dueDiv = document.createElement("div");
+        dueDiv.classList.add("main__body__todos__todo-row__due-date");
+        dueDiv.innerText = format(new Date(todo.dueDate), "dd/MM/yyyy");
+        todoRowDiv.appendChild(dueDiv);
+
+        const priorityDiv = document.createElement("div");
+        priorityDiv.classList.add("main__body__todos__todo-row__priority");
+        priorityDiv.innerText = todo.priority;
+        todoRowDiv.appendChild(priorityDiv);
+
+        const deleteDiv = document.createElement("div");
+        deleteDiv.classList.add("main__body__todos__todo-row__delete");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = '<i class="fa fa-times"></i>';
+
+        deleteButton.addEventListener("click", () => {
+          Todo.removeSingleInstance(todo);
+          UI.displayMainBody(todoKey, todoValue, false);
+        });
+
+        deleteDiv.appendChild(deleteButton);
+        todoRowDiv.appendChild(deleteDiv);
+
+        mainBody.appendChild(todoRowDiv);
+      });
+    }
   }
 
   static initTodoAdd() {
-    const addTodoButton = document.getElementById("add-todo-button");
+    const footer = document.getElementById("main__footer");
+    footer.innerHTML = "";
+    const addTodoButton = document.createElement("button");
+    addTodoButton.innerHTML = '<i class="fas fa-plus"></i>Add todo';
+    addTodoButton.setAttribute("id", "main__footer__add");
 
     addTodoButton.addEventListener("click", (event) => {
       UI.toggleModal("modal__todo");
     });
-  }
 
-  // -------------------------- //
+    footer.appendChild(addTodoButton);
+  }
 
   static initTodoListModal() {
     const addButton = document.getElementById("modal__todolist__add");
@@ -211,12 +281,25 @@ export default class UI {
       document.getElementById("modal__todolist__input--name").value = "";
 
       UI.initDynamicNav();
-      UI.makeTodoListNavActive(TodoList.instances.length + 1);
+      UI.makeTodoListNavActive(TodoList.instances.length + 2);
 
       const todoListId = TodoList.instances[TodoList.instances.length - 1].id;
-
-      UI.displayTodos("todoListId", todoListId);
+      UI.displayMainHeader(todoListId);
+      UI.displayMainBody("todoListId", todoListId, false);
+      UI.initTodoAdd();
       UI.toggleModal("modal__todolist");
+    } else {
+      const addTodoListHeader = document.getElementById(
+        "modal__todolist__header"
+      );
+      const note = document.createElement("div");
+      note.setAttribute("id", "modal__todolist__header__note");
+      note.innerHTML = "Fill the field";
+      addTodoListHeader.appendChild(note);
+
+      setTimeout(() => {
+        note.style.display = "none";
+      }, 1000);
     }
   }
 
@@ -234,8 +317,6 @@ export default class UI {
     modal.classList.toggle("active");
   }
 
-  // -------------------------------------
-
   static initTodoModal() {
     const addButton = document.getElementById("modal__todo__add");
     addButton.addEventListener("click", UI.addTodoFromModal);
@@ -246,12 +327,19 @@ export default class UI {
       document.getElementById("modal__todo__input--title").value = "";
       UI.toggleModal("modal__todo");
     });
+
+    const today = new Date();
+    const datePicker = document.getElementById("modal__todo__input--duedate");
+
+    const [date] = today.toISOString().split("T");
+    datePicker.min = date;
   }
 
   static addTodoFromModal() {
-    const todo = document.querySelector("#todo");
+    const todo = document.querySelector("#main__body__todos");
     const dataTodoKey = todo.getAttribute("data-todo-key");
-    const dataTodoValue = todo.getAttribute("data-todo-value");
+    const dataTodoKeyString = todo.getAttribute("data-todo-value");
+    const dataTodoValue = Number(dataTodoKeyString);
 
     const titleInput = document.getElementById("modal__todo__input--title");
     const title = titleInput.value;
@@ -268,9 +356,21 @@ export default class UI {
     );
     const priority = priorityInput.value;
 
-    Todo.add(dataTodoValue, title, description, dueDate, priority, false);
+    if (title !== "" && description !== "" && dueDate !== "") {
+      Todo.add(dataTodoValue, title, description, dueDate, priority, false);
 
-    UI.displayTodos(dataTodoKey, dataTodoValue);
-    UI.toggleModal("modal__todo");
+      UI.displayMainBody(dataTodoKey, dataTodoValue, false);
+      UI.toggleModal("modal__todo");
+    } else {
+      const addTodoHeader = document.getElementById("modal__todo__header");
+      const note = document.createElement("div");
+      note.setAttribute("id", "modal__todo__header__note");
+      note.innerHTML = "Fill all fields";
+      addTodoHeader.appendChild(note);
+
+      setTimeout(() => {
+        note.style.display = "none";
+      }, 1000);
+    }
   }
 }

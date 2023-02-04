@@ -16,6 +16,7 @@ export default class TodoList {
   static add(name) {
     const todoList = new TodoList(name);
     TodoList.instances.push(todoList);
+    TodoList.updateLocalStorage();
   }
 
   static remove(id) {
@@ -23,5 +24,22 @@ export default class TodoList {
       (instance) => instance.id !== id
     );
     Todo.instances = Todo.instances.filter((todo) => todo.todoListId !== id);
+    TodoList.updateLocalStorage();
+  }
+
+  static checkTodoListLocalStorage() {
+    const localStorageTodoList = localStorage.getItem("TodoList.instances");
+    if (localStorageTodoList) {
+      TodoList.instances = JSON.parse(localStorageTodoList);
+    } else {
+      TodoList.add("Inbox");
+    }
+  }
+
+  static updateLocalStorage() {
+    localStorage.setItem(
+      "TodoList.instances",
+      JSON.stringify(TodoList.instances)
+    );
   }
 }

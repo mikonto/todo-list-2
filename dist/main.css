@@ -3,6 +3,9 @@
   --secondary-dark: #555;
   --primary-light: #eee;
   --secondary-light: #ddd;
+  --darker-light: #ccc;
+  --white: #fff;
+  --font: #000;
 }
 
 * {
@@ -12,7 +15,7 @@
 body {
   min-height: 100vh;
   font-family: "Roboto", sans-serif;
-  color: var(--primary-dark);
+  color: var(--font);
   display: grid;
   grid-template-rows: 80px calc(100vh - 80px - 50px) 50px;
   grid-template-columns: 250px calc(100% - 250px);
@@ -51,13 +54,13 @@ input {
 #header h1 {
   font-size: 32px;
   margin: 0;
-  color: #eee;
+  color: var(--white);
 }
 
 #header__toggle-nav {
   all: unset;
   cursor: pointer;
-  color: #eee;
+  color: var(--primary-light);
   display: none;
 }
 
@@ -80,7 +83,7 @@ input {
 
 .nav__button:hover,
 .nav__button.active {
-  background-color: #ccc;
+  background-color: var(--darker-light);
   font-weight: bold;
 }
 
@@ -123,21 +126,37 @@ input {
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
+  padding-top: 0px;
   height: 100%;
   overflow: auto;
 }
 
-#add-todo-button {
-  margin-left: auto;
+#main__header {
+  width: 100%;
+}
+
+#main__body {
+  width: 100%;
+}
+
+#main__footer {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#main__footer__add {
   padding-left: 0px;
   padding-right: 0px;
   width: 120px;
+  margin-left: auto;
 }
 
 #footer {
   grid-area: footer;
-  color: #eee;
-  background-color: var(--secondary-dark);
+  color: var(--white);
+  background-color: var(--primary-dark);
   text-align: center;
 }
 
@@ -145,28 +164,84 @@ input {
   vertical-align: middle;
 }
 
-/* Responsive layout*/
-@media (max-width: 650px) {
-  body {
-    grid-template-areas:
-      "header header"
-      "nav nav"
-      "main main"
-      "footer footer";
-    grid-template-rows: 80px max-content auto 50px;
-  }
-
-  #header button {
-    display: block;
-  }
-
-  #nav {
-    display: none;
-    width: 100%;
-  }
+#main__body__no-todos {
+  display: none;
 }
 
-/* ----------------------------------------------------------- */
+#main__body__no-todos.active {
+  display: block;
+}
+
+#main__body__todos__header {
+  display: none;
+  border-radius: 6px 6px 0 0;
+  background-color: var(--secondary-dark);
+  color: var(--white);
+  font-weight: bold;
+  padding: 10px;
+}
+
+#main__body__todos__header.active {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#main__body__todos__header__title,
+#main__body__todos__header__description,
+#main__body__todos__header__due-date,
+#main__body__todos__header__priority {
+  width: calc(50% - (1em / 2));
+  padding-left: 8px;
+}
+
+#main__body__todos__header__checkbox,
+#main__body__todos__header__delete {
+  width: calc(10% - (1em / 2));
+  padding-left: 8px;
+}
+
+.main__body__todos__todo-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* padding: 15px; */
+  /* color: var(--primary-dark); */
+}
+
+.main__body__todos__todo-row:nth-child(even) {
+  background-color: var(--secondary-light);
+}
+.main__body__todos__todo-row:nth-child(odd) {
+  background-color: var(--primary-light);
+}
+
+.main__body__todos__todo-row:last-of-type {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.main__body__todos__todo-row__title,
+.main__body__todos__todo-row__description,
+.main__body__todos__todo-row__due-date,
+.main__body__todos__todo-row__priority {
+  width: calc(50% - (1em / 2));
+  padding: 10px;
+  line-height: 1.9em;
+}
+
+.main__body__todos__todo-row__checkbox,
+.main__body__todos__todo-row__delete {
+  width: calc(10% - (1em / 2));
+  padding: 10px;
+  line-height: 1.9em;
+}
+
+.main__body__todos__todo-row__checkbox button,
+.main__body__todos__todo-row__delete button {
+  background-color: transparent;
+  padding: 5px;
+}
 
 #modal__todolist,
 #modal__todo {
@@ -192,7 +267,7 @@ input {
 
 #modal__todolist__content,
 #modal__todo__content {
-  background-color: #fefefe;
+  background-color: var(--white);
   margin: 15% auto;
   padding: 20px;
   width: 300px;
@@ -203,6 +278,14 @@ input {
 #modal__todo__header {
   font-size: 22px;
   margin-bottom: 10px;
+}
+
+#modal__todolist__header__note,
+#modal__todo__header__note {
+  color: red;
+  font-size: 16px;
+  display: inline;
+  margin-left: 8px;
 }
 
 #modal__todolist__body,
@@ -237,42 +320,112 @@ input {
 #modal__todo__cancel:hover,
 #modal__todo__add:hover {
   background-color: var(--secondary-dark);
-  color: white;
+  color: var(--white);
 }
 
-/* ------------------------- */
+/* Responsive layout*/
+@media (max-width: 650px) {
+  body {
+    grid-template-areas:
+      "header header"
+      "nav nav"
+      "main main"
+      "footer footer";
+    grid-template-rows: 80px max-content auto 50px;
+  }
 
-table {
-  width: 100%;
-  border-radius: 5px;
-  border-collapse: separate;
-  border-spacing: 0;
+  #header button {
+    display: block;
+  }
+
+  #nav {
+    display: none;
+    width: 100%;
+  }
 }
 
-thead {
-  background-color: var(--primary-dark);
-  color: #eee;
-}
+@media (max-width: 900px) {
+  #main__body__todos__header {
+    display: none !important;
+  }
 
-th,
-td {
-  padding: 12px 20px;
-  /* border: 1px solid var(--secondary-dark); */
-  text-align: left;
-}
+  .main__body__todos__todo-row {
+    display: grid;
+    width: 100%;
+    grid-template-areas:
+      "title title"
+      "description description"
+      "duedate duedate"
+      "priority priority"
+      "check delete";
 
-tbody {
-  background-color: var(--secondary-light);
-}
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
 
-tbody tr:nth-child(odd) {
-  background-color: var(--primary-light);
-}
+  .main__body__todos__todo-row__title {
+    grid-area: title;
+    background-color: var(--secondary-dark);
+    color: var(--white);
+    width: 100%;
+    font-weight: bold;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
 
-table td:first-child,
-table th:first-child,
-table td:last-child,
-table th:last-child {
-  width: 50px;
-  text-align: center;
+  .main__body__todos__todo-row__description {
+    grid-area: description;
+  }
+
+  .main__body__todos__todo-row__description::before {
+    content: "Description: ";
+    font-weight: bold;
+
+    white-space: nowrap;
+  }
+
+  .main__body__todos__todo-row__due-date {
+    grid-area: duedate;
+  }
+
+  .main__body__todos__todo-row__due-date::before {
+    content: "Due: ";
+    font-weight: bold;
+
+    white-space: nowrap;
+  }
+
+  .main__body__todos__todo-row__priority {
+    grid-area: priority;
+  }
+
+  .main__body__todos__todo-row__priority::before {
+    content: "Priority: ";
+    font-weight: bold;
+
+    white-space: nowrap;
+  }
+
+  .main__body__todos__todo-row__checkbox {
+    grid-area: check;
+  }
+
+  .main__body__todos__todo-row__checkbox::before {
+    content: "Finish: ";
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .main__body__todos__todo-row__delete {
+    grid-area: delete;
+  }
+
+  .main__body__todos__todo-row__delete::before {
+    content: "Delete: ";
+    font-weight: bold;
+
+    white-space: nowrap;
+  }
 }

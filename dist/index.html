@@ -43,6 +43,10 @@
           <i class="fas fa-calendar-week"></i>
           This week
         </button>
+        <button id="nav__static__completed" class="nav__button">
+          <i class="fa-sharp fa-solid fa-check"></i>
+          Completed
+        </button>
       </div>
 
       <h1 class="nav__h1">Todo-Lists</h1>
@@ -53,7 +57,22 @@
       </button>
     </nav>
 
-    <main id="main"></main>
+    <main id="main">
+      <div id="main__header"><h1>Inbox</h1></div>
+      <div id="main__body">
+        <div id="main__body__no-todos">No todos</div>
+        <div id="main__body__todos__header">
+          <div id="main__body__todos__header__checkbox"></div>
+          <div id="main__body__todos__header__title">Title</div>
+          <div id="main__body__todos__header__description">Description</div>
+          <div id="main__body__todos__header__due-date">Due date</div>
+          <div id="main__body__todos__header__priority">Priority</div>
+          <div id="main__body__todos__header__delete"></div>
+        </div>
+        <div id="main__body__todos"></div>
+      </div>
+      <div id="main__footer"></div>
+    </main>
 
     <div id="modal__todolist">
       <div id="modal__todolist__content">
@@ -63,6 +82,7 @@
             type="text"
             id="modal__todolist__input--name"
             placeholder="Enter todo-list name"
+            required
           />
         </div>
         <div id="modal__todolist__footer">
@@ -71,38 +91,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div id="modal__todo">
-      <div id="modal__todo__content">
-        <div id="modal__todo__header">Add Todo</div>
-        <div id="modal__todo__body">
-          <input
-            type="text"
-            id="modal__todo__input--name"
-            placeholder="Enter title"
-          />
-          <input
-            type="text"
-            id="modal__todo__input--description"
-            placeholder="Enter description"
-          />
-          <input
-            type="text"
-            id="modal__todo__input--duedate"
-            placeholder="Enter due date"
-          />
-          <input
-            type="text"
-            id="modal__todo__input--priority"
-            placeholder="Enter priority"
-          />
-        </div>
-        <div id="modal__todo__footer">
-          <button id="modal__todo__add">Add</button>
-          <button id="modal__todo__cancel">Cancel</button>
-        </div>
-      </div>
-    </div> -->
 
     <div id="modal__todo">
       <div id="modal__todo__content">
@@ -124,9 +112,9 @@
             placeholder="Enter due date"
           />
           <select id="modal__todo__input--priority">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="Low">Low priority</option>
+            <option value="Medium" selected>Medium priority</option>
+            <option value="High">High priority</option>
           </select>
         </div>
         <div id="modal__todo__footer">
@@ -135,8 +123,6 @@
         </div>
       </div>
     </div>
-
-
 
     <footer id="footer">
       <p>Mikonto</p>
